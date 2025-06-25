@@ -183,6 +183,32 @@ public class EmployeeDAO {
 		return result;
 	}
 
+	public int updateState(Connection conn, int id, String col, String value) {
+		// TODO Auto-generated method stub
+		// id = empNo , col = 뭐 눌렀는지 컬럼 is_Admin or status , value Y or N
+		
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "update emp set " + col + " = ? where empno = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, value);
+			pstmt.setInt(2, id);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+		}
+		return result;
+		//쿼리 작성하고 결과를 다시 리턴한다 (Service에서 왔으니 Service로 리턴) int result를 가져감
+		
+	}
+	
+
 
 
 	

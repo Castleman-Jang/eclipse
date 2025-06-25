@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 @WebServlet("/checkEmpNo.me")
 public class checkEmpNoServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+   private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -25,27 +25,27 @@ public class checkEmpNoServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int empNo = Integer.parseInt(request.getParameter("inputEmpNo"));
-		EmployeeService eService = new EmployeeService();
-		int result = eService.checkEmpNo(empNo);
-		
-		//비동기로 쓸거임 
-		PrintWriter out = response.getWriter();
-		out.println(result);
-		
-		
-		
-	}
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+   /**
+    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+    */
+   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+      int empNo = Integer.parseInt(request.getParameter("inputEmpNo"));
+      EmployeeService eService = new EmployeeService();
+      int result = eService.checkEmpNo(empNo);
+      
+      //비동기로 쓸거임 
+      PrintWriter out = response.getWriter();
+      out.println(result);
+      
+      
+      
+   }
+   /**
+    * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+    */
+   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+      // TODO Auto-generated method stub
+      doGet(request, response);
+   }
 
 }

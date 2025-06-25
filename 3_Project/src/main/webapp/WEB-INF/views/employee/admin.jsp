@@ -29,6 +29,13 @@
 	#adminDiv+div>table{width: 100%; text-align: center;}
 	th{border-bottom: 1px solid black;}
 	#adminDiv+div>table td{height: 35px;}
+	
+	#adminDiv+div>table td>div{
+		border: 1px solid black; height: 80%; width: 45%; display: inline-block;
+		padding-top: 3%; cursor: pointer;
+		}
+	.selectState{background: lightgrey;}
+	.unselectState{background: none;}
 </style>
 </head>
 <body>
@@ -84,8 +91,14 @@
 							<td>${ e.sal }</td>
 							<td>${ e.comm }</td>
 							<td>${ e.dept }</td>
-							<td>${ e.isAdmin }</td>
-							<td>${ e.status }</td>
+							<td>
+								<div class="${ e.isAdmin == 'Y' ? 'selectState' : 'unselectState' }">Y</div> <!-- Y면 클래스명을 selectState로, 아니면 unselectState로 하겠다 -->
+								<div class="${ e.isAdmin == 'N' ? 'selectState' : 'unselectState' }">N</div>
+							</td>
+							<td>
+								<div class="${ e.status == 'Y' ? 'selectState' : 'unselectState' }">Y</div>
+								<div class="${ e.status == 'N' ? 'selectState' : 'unselectState' }">N</div>
+							</td>
 						</tr>
 					</c:forEach>
 				</c:if>
@@ -214,7 +227,7 @@
 								targetTd.innerText = '중복된 사원번호입니다.'
 									targetTd.style.color ='red';
 									validate = false;
-							}
+							}/*  */
 							targetTd.style.fontSize= '12px';
 						},
 						error: (data) =>{
@@ -226,7 +239,49 @@
 				}
 			});
 			
-			
+			const table = document.getElementById('empList');
+			//const stateButtons = document.querySelectorAll("table div");
+			const stateButtons = table.querySelectorAll('div');
+			//console.log(stateButtons);
+			for(const button of stateButtons){ //stateButtons를 하나하나 꺼내와서 button변수에 담겠다. for of
+				button.addEventListener('click', function(){ //button에 클릭 이벤트를 거는거임. 클릭 되면 실행할 함수 
+					if(this.className == 'unselectState'){ //여기서 클래스명이 unselectState면 (선택되지 않은) 
+						const myTd = this.parentElement; //부모에 접근
+						const myTr = myTd.parentElement; // 부모의 부모에 접근(tr까지왔음)
+						const myTrChildren = myTr.children; //그 tr안에서 자식들 접근. td들
+						const empNo = myTrChildren[0].innerText; //눌린 곳에 해당하는 사번 뽑아냈음
+						//console.log(empNo);
+						
+						let clickColumnIndex;
+						for(const index in myTrChildren){ // for in은 index를 뱉고, for of는 해당하는 element요소를 뱉음
+							if(myTrChildren[index] == myTd){ //몇 번째 td를 눌렀는지 
+								clickColumnIndex = index;
+							}
+						}
+						
+						$.ajax({
+							url: '${contextPath}/updateState.me',
+							data: {empNo:empNo, column:clickColumnIndex == 8 ? 'is_admin' : 'status', value:this.innerText}, //넘길 값들,
+							type: 'post',
+							success: data => { //성공했을때
+								console.log(data);
+								if(data == 'success'){
+									this.className = 'selectState';
+									for(const siblings of myTd.children){
+										if(siblings != this){
+											siblings.className = 'unselectState';
+										}
+									}
+								}else{
+									alert('상태 변경을 실패하였습니다.');
+								}
+							},
+							error: data => console.log(data) //실패했을때, ( 내용이 하나라 중괄호 생략했음.) 여기에는 세미콜론이 붙으면 안된대 
+						});
+						// 어떤 식으로 컬럼을 넘길지 생각해보기 : 눌린게 부모요소의 8번째 요소인지(관리자여부)  9번쨰요소인지(활동여부) ? 
+					}
+				});
+			}
 			
 		}
 

@@ -48,7 +48,9 @@ public class EmployeeService {
 		int result = empDAO.updateEmployee(conn, e);
 		if(result>0) {
 			commit(conn);
-		}else {rollback(conn);	}
+		}else {
+			rollback(conn);
+		}
 		return result;		
 	}
 
@@ -57,6 +59,20 @@ public class EmployeeService {
 		Connection conn = getConnection();
 		int result = empDAO.checkEmpNo(conn, empNo);
 		return result;
+	}
+
+	public int updateState(int id, String col, String value) {
+		// TODO Auto-generated method stub
+		Connection conn = getConnection();
+		int result = empDAO.updateState(conn, id, col, value);//인자로 넘어온 id,col,value 이랑 conn을 DAO로 보낸다
+		//DAO에서 리턴 받아온 int result를 int result에 담고
+		if(result>0) {
+			commit(conn);
+		}else {
+			rollback(conn);
+		}
+		return result; //변수에 담은 result를 다시 리턴한다 (Controller(UpdateStateServlet)에서 불렀으니 거기로 리턴한다
+		
 	}
 
 
